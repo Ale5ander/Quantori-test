@@ -1,0 +1,73 @@
+// Тест записан с учетом того, что ранее в браузере авторизовывались хотя бы с одного аккаунта Яндекса и теперь он предлагает войти в ранее используемые аккаунты:
+
+
+import { browser, by, element, Key, logging, ExpectedConditions as EC } from 'protractor';
+
+describe('Yandex invalid login', () => {
+
+	beforeAll(async () => { });
+	beforeEach(async () => { });
+
+	it('should do something', async () => {
+		await browser.get('https://yandex.ru/');
+		await element(by.linkText("Войти в почту")).click();
+		const handles_3 = await browser.getAllWindowHandles();
+		await browser.switchTo().window(handles_3[handles_3.length - 1]);
+		await element(by.xpath("//div[@id='root']/div/div/div[2]/div/div/div[3]/div[2]/div/div/a/span[2]")).click();
+		await element(by.xpath("//button[@type='submit']")).click();
+		await element(by.id("passp-field-login")).sendKeys('testmondaytest');
+		await browser.sleep();
+		await element(by.xpath("//button[@type='submit']")).click();
+		await browser.sleep();
+		expect(await element(by.xpath("//div[@id='root']/div/div/div[2]/div/div/div[3]/div[2]/div/div/div/form/div/div[2]")).getText()).toContain('Такого аккаунта нет');
+		expect(await element(by.linkText("Зарегистрировать testmondaytest")).getText()).toContain('Зарегистрировать testmondaytest');
+	});
+
+	afterEach(async () => {
+		// Assert that there are no errors emitted from the browser
+		const logs = await browser.manage().logs().get(logging.Type.BROWSER);
+		expect(logs).not.toContain(jasmine.objectContaining({
+			level: logging.Level.SEVERE,
+		} as logging.Entry));
+	});
+
+});
+
+
+
+
+
+
+// Если необходимо исключить развитие событий c предлагаемыми аккаунтами, ниже тест-кейс без предложений войти в ранее используемые аккаунты:
+
+
+import { browser, by, element, Key, logging, ExpectedConditions as EC } from 'protractor';
+
+describe('Yandex invalid login', () => {
+
+	beforeAll(async () => { });
+	beforeEach(async () => { });
+
+	it('should do something', async () => {
+		await browser.get('https://yandex.ru/');
+		await element(by.linkText("Войти в почту")).click();
+		const handles_3 = await browser.getAllWindowHandles();
+		await browser.switchTo().window(handles_3[handles_3.length - 1]);
+		await element(by.xpath("//button[@type='submit']")).click();
+		await element(by.id("passp-field-login")).sendKeys('testmondaytest');
+		await browser.sleep();
+		await element(by.xpath("//button[@type='submit']")).click();
+		await browser.sleep();
+		expect(await element(by.xpath("//div[@id='root']/div/div/div[2]/div/div/div[3]/div[2]/div/div/div/form/div/div[2]")).getText()).toContain('Такого аккаунта нет');
+		expect(await element(by.linkText("Зарегистрировать testmondaytest")).getText()).toContain('Зарегистрировать testmondaytest');
+	});
+
+	afterEach(async () => {
+		// Assert that there are no errors emitted from the browser
+		const logs = await browser.manage().logs().get(logging.Type.BROWSER);
+		expect(logs).not.toContain(jasmine.objectContaining({
+			level: logging.Level.SEVERE,
+		} as logging.Entry));
+	});
+
+});
